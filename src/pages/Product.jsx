@@ -7,10 +7,12 @@ import RelatedProducts from '../components/RelatedProducts';
 const Product = () => {
 
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, cartItems } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
   const [size, setSize] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [cartData, setCartData] = useState([]);
 
   const fetchProductData = () => {
     products.map((item) => {
@@ -19,11 +21,25 @@ const Product = () => {
         setImage(item.image[0]);
       }
     })
-  }
+  };
 
   useEffect(() => {
     fetchProductData();
   }, [productId, products])
+
+  useEffect(() => {
+    const tempData = [];
+    for (const items in cartItems) {
+      for (const item in cartItems[items]) {
+        tempData.push({
+          _id: items,
+          size: item,
+          qty: cartItems[items][item],
+        });
+      }
+    }
+    setCartData(tempData);
+  }, [cartItems]);
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500'>
@@ -59,8 +75,10 @@ const Product = () => {
                 return <button onClick={() => setSize(item)} key={index} className={`border border-gray-300 px-3 py-1 cursor-pointer ${item === size ? 'border-orange-500' : ''}`}>{item}</button>
               })}
             </div>
+            <p>Select Quantity</p>
+            <input onChange={(e) => setQuantity(Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} value={quantity} />
           </div>
-          <button onClick={()=> addToCart(productData._id, size)} className='bg-black text-white px-8 py-3 mt-4 active:bg-gray-700 cursor-pointer'>ADD TO CART</button>
+          <button onClick={()=> addToCart(productData._id, size, quantity)} className='bg-black text-white px-8 py-3 mt-4 active:bg-gray-700 cursor-pointer'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
             <p>100% Original product</p>

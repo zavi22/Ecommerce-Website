@@ -33,7 +33,7 @@ const ShopContextProvider = (props) => {
 
     const delivery_fee = 10;
 
-    const addToCart = (itemId, size) => {
+    const addToCart = (itemId, size, quantity = 1) => {
         if (!size) {
             toast.error("Please select a size");
             return;
@@ -46,13 +46,13 @@ const ShopContextProvider = (props) => {
 
         if (cartData[itemId]) {
             if (cartData[itemId][size]) {
-                cartData[itemId][size]++;
+                cartData[itemId][size] += quantity;
             } else {
-                cartData[itemId][size] = 1;
+                cartData[itemId][size] = quantity;
             }
         } else {
             cartData[itemId] = {};
-            cartData[itemId][size] = 1;
+            cartData[itemId][size] = quantity;
         }
         setCartItems(cartData);
         toast.success("Added to cart");
