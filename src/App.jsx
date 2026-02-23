@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import Loader from './components/Loader'
 import ChatWidget from './components/ChatWidget'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 
 const App = () => {
@@ -24,7 +25,7 @@ const App = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 8000)
+    }, 5000)
 
     return () => clearTimeout(timer)
   }, [])
@@ -58,6 +59,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/place-order' element={<PlaceOrder />} />
           <Route path='/orders' element={<Orders />} />
+          <Route path='/privacy' element={<PrivacyPolicy />} />
         </Routes>
         <Footer />
       </div>
