@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { products } from "../assets/assets"
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // createContext is a React API used to create global state.
 // Context lets you share data (like products, user, cart, theme) across components without prop drilling.
@@ -31,6 +32,9 @@ const ShopContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
     // for showing and sending items in cart
 
+    const navigate = useNavigate();
+    // navigate is a function that allows you to programmatically change routes in your app. You can use it to navigate to different pages based on user actions (like clicking a button). For example, navigate('/cart') will take the user to the cart page.
+
     const delivery_fee = 10;
 
     const addToCart = (itemId, size, quantity = 1) => {
@@ -56,6 +60,23 @@ const ShopContextProvider = (props) => {
         }
         setCartItems(cartData);
         toast.success("Added to cart");
+    }
+
+    const getCartAmount = () => {
+        let totalAmount = 0;
+        for (const items in cartItems) {
+            let itemInfo = products.find((product) => product._id === items);
+            for (const item in cartItems[items]) {
+                try {
+                    if (cartItems[items][item] > 0){
+                        totalAmount += itemInfo.price * cartItems[items][item]
+                    }
+                } catch (error) {
+                    
+                }
+            }
+        }
+        return totalAmount;
     }
 
     const getCartCount = () => {
@@ -125,7 +146,7 @@ useEffect(() => {
 // OR special characters
 
 const value = {
-    products, currency, delivery_fee, search, setSearch, showSearch, setShowSearch, selectedCategory, setSelectedCategory, cartItems, setCartItems, addToCart, getCartCount, updateQuantity
+    products, currency, delivery_fee, search, setSearch, showSearch, setShowSearch, selectedCategory, setSelectedCategory, cartItems, setCartItems, addToCart, getCartCount, updateQuantity, getCartAmount, navigate
 }
 
 // This object holds all data you want to share globally
